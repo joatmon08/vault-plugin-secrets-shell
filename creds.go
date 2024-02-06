@@ -97,7 +97,6 @@ func (b *shellBackend) renew(ctx context.Context, req *logical.Request, d *frame
 func getCredentials(ctx context.Context, c *shellClient) (*credObject, error) {
 	return &credObject{
 		Username: "foo",
-		Password: "bar",
 	}, nil
 }
 

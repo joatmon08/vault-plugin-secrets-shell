@@ -65,6 +65,11 @@ func (b *shellBackend) create(ctx context.Context, req *logical.Request, role *s
 		return nil, err
 	}
 
+	config, err := getConfig(ctx, req.Storage)
+	if err != nil {
+		return nil, fmt.Errorf("unable to read configuration: %w", err)
+	}
+
 	// TODO: You can add log messages using the logger object in backend.
 	b.Logger().Debug("getting username and password for host")
 
@@ -72,12 +77,18 @@ func (b *shellBackend) create(ctx context.Context, req *logical.Request, role *s
 	if err != nil {
 		return nil, fmt.Errorf("error getting credentials: %w", err)
 	}
+
+	password, err := b.generatePassword(ctx, config.PasswordPolicy)
+	if err != nil {
+		return nil, err
+	}
+
 	// The response is divided into two objects (1) internal data and (2) data.
 	// If you want to reference any information in your code, you need to
 	// store it in internal data!
 	resp := b.Secret(credObjectType).Response(map[string]interface{}{
 		"username": creds.Username,
-		"password": creds.Password,
+		"password": password,
 	}, map[string]interface{}{
 		"role": role.Name,
 	})
