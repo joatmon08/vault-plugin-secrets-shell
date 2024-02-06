@@ -6,7 +6,7 @@ test_plugin: build
 
 test_commands:
 	vault plugin list | grep vault-plugin-secrets-shell
-	vault secrets enable -path=idrac vault-plugin-secrets-shell
-	vault write idrac/config username="idrac" password='Testing!123' url="127.0.0.1"
-	vault write idrac/host/bmc.server.com host=bmc.server.com
-	vault read idrac/creds/bmc.server.com
+	vault secrets enable -path=test vault-plugin-secrets-shell
+	vault write test/config username="test" password='Testing!123' url="127.0.0.1"
+	vault write test/host/test.server.com host=test.server.com
+	vault read test/creds/test.server.com
